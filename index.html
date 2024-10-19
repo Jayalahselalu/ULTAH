@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Selamat Ulang Tahun Sayang!</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Lobster&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* General Styles */
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: url("gambar-background.jpg") no-repeat center center/cover;
+        background-attachment: fixed;
+        font-family: "Arial", sans-serif;
+        color: white;
+        text-align: center;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .container {
+        position: relative;
+      }
+
+      /* Heading and Text */
+      h1 {
+        font-family: "Dancing Script", cursive;
+        font-size: 4em;
+        animation: fadeIn 3s ease;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      }
+
+      p {
+        font-family: "Lobster", cursive;
+        font-size: 1.5em;
+        animation: fadeIn 3s ease;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+      }
+
+      /* Date and Time */
+      #datetime {
+        font-size: 1.2em;
+        margin: 10px 0;
+        animation: fadeIn 4s ease;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+      }
+
+      /* Countdown Timer */
+      #countdown {
+        font-size: 2em;
+        color: yellow;
+        margin-top: 20px;
+      }
+
+      /* Button Styling */
+      button {
+        padding: 15px 30px;
+        font-size: 1.2em;
+        margin-top: 20px;
+        background-color: #ff4081;
+        border: none;
+        color: white;
+        cursor: pointer;
+        animation: fadeIn 4s ease;
+        border-radius: 25px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #ff79a1;
+        transform: scale(1.1);
+      }
+
+      button:disabled {
+        background-color: gray;
+        cursor: not-allowed;
+      }
+
+      /* Disabled message */
+      #disabled-message {
+        margin-top: 10px;
+        color: yellow;
+        font-size: 1em;
+        display: none; /* Initially hidden */
+      }
+
+      /* Animation Keyframes */
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Confetti Styling */
+      .confetti {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        background-color: #ff4081;
+        border-radius: 50%;
+        animation: dropConfetti 5s linear infinite;
+      }
+
+      @keyframes dropConfetti {
+        0% {
+          transform: translateY(-100px) rotate(0deg);
+          left: calc(50% - 50px);
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          left: calc(50% + 50px);
+        }
+      }
+
+      /* Background Animation */
+      .stars {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .star {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.7;
+        animation: twinkling 2s infinite;
+      }
+
+      @keyframes twinkling {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .hidden-video {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stars"></div>
+    <div class="container">
+      <h1>Selamat Ulang Tahun, Sayang!</h1>
+      <p id="birthday-message"></p>
+      <div id="datetime"></div>
+      <div id="countdown"></div>
+      <button id="surprise-btn" disabled>Buka Kejutan</button>
+      <div id="disabled-message">
+        Tombol ini belum bisa di klik, tunggu sampai tanggal ulang tahun!
+      </div>
+      <button id="video-btn">Tonton Video Spesial</button>
+      <div class="confetti"></div>
+    </div>
+
+    <audio id="click-sound" src="klik.mp3"></audio>
+    <!-- Pastikan file ada -->
+
+    <script>
+      // Pesan ulang tahun acak
+      const messages = [
+        "Semoga harimu penuh kebahagiaan!",
+        "Semoga semua impianmu terwujud!",
+        "Selamat berbahagia di hari istimewa ini!",
+        "Semoga hidupmu dipenuhi cinta dan tawa!",
+        "Selamat ulang tahun! Mari kita rayakan!",
+      ];
+      document.getElementById("birthday-message").innerText =
+        messages[Math.floor(Math.random() * messages.length)];
+
+      // Smooth transition when button is clicked
+      document
+        .getElementById("surprise-btn")
+        .addEventListener("click", function (event) {
+          if (this.disabled) {
+            event.preventDefault(); // Mencegah tindakan default
+            document.getElementById("disabled-message").style.display = "block"; // Tampilkan pesan
+          } else {
+            document.getElementById("click-sound").play();
+            window.location.href = "surprise.html";
+          }
+        });
+
+      document
+        .getElementById("video-btn")
+        .addEventListener("click", function () {
+          const videoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Ganti dengan URL video
+          window.open(videoUrl, "_blank");
+        });
+
+      // Display current date and time
+      function updateDateTime() {
+        const now = new Date();
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        };
+        document.getElementById("datetime").innerText = now.toLocaleString(
+          "id-ID",
+          options
+        );
+      }
+
+      // Countdown Timer
+      function startCountdown(targetDate) {
+        const countdownElement = document.getElementById("countdown");
+        const timer = setInterval(() => {
+          const now = new Date();
+          const distance = targetDate - now;
+
+          if (distance < 0) {
+            clearInterval(timer);
+            countdownElement.innerText = "Selamat Ulang Tahun!";
+            document.getElementById("surprise-btn").disabled = false; // Enable button
+            document.getElementById("disabled-message").style.display = "none"; // Hide message
+            return;
+          }
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const minutes = Math.floor(
+            (distance % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          countdownElement.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }, 1000);
+      }
+
+      const birthdayDate = new Date("2024-10-15T00:00:00"); // Ganti dengan tanggal ulang tahun
+      startCountdown(birthdayDate);
+      setInterval(updateDateTime, 1000);
+      updateDateTime(); // initial call
+
+      // Create animated stars
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement("div");
+        star.classList.add("star");
+        const size = Math.random() * 3 + 2; // Random size between 2px to 5px
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.top = Math.random() * 100 + "vh";
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.animationDuration = `${Math.random() * 2 + 2}s`;
+        document.querySelector(".stars").appendChild(star);
+      }
+
+      // Show disabled message when button is clicked
+      const surpriseButton = document.getElementById("surprise-btn");
+      surpriseButton.addEventListener("click", function (event) {
+        if (this.disabled) {
+          event.preventDefault(); // Prevent default action
+          document.getElementById("disabled-message").style.display = "block"; // Show the message
+        }
+      });
+    </script>
+  </body>
+</html>
